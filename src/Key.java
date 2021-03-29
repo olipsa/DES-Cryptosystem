@@ -25,6 +25,11 @@ public class Key {
         for(int i=0;i<64;i++)
             values.add((int)(Math.random()*2));
     }
+    public Key(Key copiedKey)
+    {
+        values=new ArrayList<>(copiedKey.values);
+        initialValues=new ArrayList<>(copiedKey.initialValues);
+    }
     public void dropParityBits(){
         //Transposition according to PC1 matrix
         initialValues=new ArrayList<>(values);

@@ -52,6 +52,8 @@ public class Sbox {
                 box6bit[i][j]=input.get(i+j);
 
     }
+
+
     void substitute(){
         for(int i=0;i<8;i++) {
             int row=box6bit[i][5]+box6bit[i][0]*2;
@@ -73,6 +75,7 @@ public class Sbox {
         }
 
     }
+
 
     public List<Integer> getOutputBlock() {
         return outputBlock;

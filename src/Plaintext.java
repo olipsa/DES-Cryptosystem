@@ -17,6 +17,13 @@ public class Plaintext {
         for(int i=0;i<64;i++)
             values.add((int)(Math.random()*2));
     }
+    public Plaintext(List<Integer>left, List<Integer>right) {
+        for(int i=0;i<32;i++)
+            values.add(left.get(i));
+        for(int i=32;i<64;i++)
+            values.add(right.get(i-32));
+
+    }
 
     public List<Integer> getValues() {
         return values;
@@ -30,9 +37,9 @@ public class Plaintext {
     }
     public void divide(SplitPlainText left,SplitPlainText right){
         for(int i=0;i<32;i++)
-            left.add(values.get(i));
+            left.add(this.values.get(i));
         for(int i=32;i<64;i++)
-            right.add(values.get(i));
+            right.add(this.values.get(i));
 
 
     }

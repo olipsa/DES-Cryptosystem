@@ -7,36 +7,53 @@ public class Main {
     {
         //Encryption
         Plaintext plaintext=new Plaintext();
-        System.out.println(plaintext.getValues());
+        System.out.println("The plaintext is: "+plaintext.getValues());
         plaintext.initialPermutation();
+        System.out.println("Plaintext after IP: "+plaintext.getValues());
         SplitPlainText left=new SplitPlainText();
         SplitPlainText right=new SplitPlainText();
         plaintext.divide(left,right);
+        System.out.println(left.getValues());
+        System.out.println(right.getValues());
         Key key=new Key();
-        System.out.println(key.getValues());
+        Key copyKey=new Key(key);
         key.dropParityBits();
+        copyKey.dropParityBits();
 
         for(int i=0;i<16;i++){
-            List<Integer> copyRPT=new ArrayList<>(right.getValues());
-            key.bitsRotation(i);
-            key.compression();
-            right.expand();
-            Sbox SboxSubstitution=new Sbox(right.XOR(key.getValues()));
-            SboxSubstitution.substitute();
-            Pbox Pbox=new Pbox(SboxSubstitution.getOutputBlock());
-            right.replace(left.XOR(Pbox.getPermutation()));
-            left.replace(copyRPT);
+            feistelFunction(left, right, key, i);
 
         }
-        Ciphertext ciphertext=new Ciphertext(left.getValues(),right.getValues());
-        System.out.println(ciphertext.getValues());
+        Ciphertext ciphertext=new Ciphertext(right.getValues(),left.getValues());
+        System.out.println("The ciphertext is: "+ciphertext.getValues());
 
         //Decryption
         plaintext.clear();
         left.clear();right.clear();
+        ciphertext.initialPermutation();
+        System.out.println("Ciphertext after IP : "+ciphertext.getValues());
         ciphertext.divide(left,right);
+        for(int i=15;i>=0;i--){
+            feistelFunction(left, right, copyKey, i);
+        }
+
+        Ciphertext currentPlaintext=new Ciphertext(right.getValues(),left.getValues());
+        System.out.println("The plaintext is: "+currentPlaintext.getValues());
 
 
 
+
+    }
+
+    private static void feistelFunction(SplitPlainText left, SplitPlainText right, Key copyKey, int i) {
+        List<Integer> copyRPT=new ArrayList<>(right.getValues());
+        copyKey.bitsRotation(i);
+        copyKey.compression();
+        right.expand();
+        Sbox sboxSubstitution=new Sbox(right.XOR(copyKey.getValues()));
+        sboxSubstitution.substitute();
+        Pbox pbox=new Pbox(sboxSubstitution.getOutputBlock());
+        right.replace(left.XOR(pbox.getPermutation()));
+        left.replace(copyRPT);
     }
 }

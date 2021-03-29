@@ -20,4 +20,8 @@ public class Pbox {
     public List<Integer> getPermutation() {
         return permutation;
     }
+    void replace(List<Integer>replacedList){
+        this.permutation=new ArrayList<>(replacedList);
+
+    }
 }
