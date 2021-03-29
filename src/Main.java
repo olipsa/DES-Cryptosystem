@@ -7,14 +7,11 @@ public class Main {
     {
         //Encryption
         Plaintext plaintext=new Plaintext();
-        System.out.println("The plaintext is: "+plaintext.getValues());
+        System.out.println("The plaintext is:     "+plaintext.getValues());
         plaintext.initialPermutation();
-        System.out.println("Plaintext after IP: "+plaintext.getValues());
         SplitPlainText left=new SplitPlainText();
         SplitPlainText right=new SplitPlainText();
         plaintext.divide(left,right);
-        System.out.println(left.getValues());
-        System.out.println(right.getValues());
         Key key=new Key();
         Key copyKey=new Key(key);
         key.dropParityBits();
@@ -25,20 +22,18 @@ public class Main {
 
         }
         Ciphertext ciphertext=new Ciphertext(right.getValues(),left.getValues());
-        System.out.println("The ciphertext is: "+ciphertext.getValues());
 
         //Decryption
         plaintext.clear();
         left.clear();right.clear();
         ciphertext.initialPermutation();
-        System.out.println("Ciphertext after IP : "+ciphertext.getValues());
         ciphertext.divide(left,right);
         for(int i=15;i>=0;i--){
             feistelFunction(left, right, copyKey, i);
         }
 
         Ciphertext currentPlaintext=new Ciphertext(right.getValues(),left.getValues());
-        System.out.println("The plaintext is: "+currentPlaintext.getValues());
+        System.out.println("Decrypted ciphertext: "+currentPlaintext.getValues());
 
 
 
